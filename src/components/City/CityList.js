@@ -5,8 +5,6 @@ import classNames from 'classnames';
 import cities from '../../utils/cities';
 import fetch from '../../utils/fetch';
 
-import { weather } from '../../utils/mock-data';
-
 import './CityList.css';
 
 const UNITS_CODE = {
