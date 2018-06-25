@@ -1,7 +1,9 @@
 import React from 'react';
 
+import CityList from '../City/CityList';
+
 export default () => (
-  <div>
-    <h1>List cities here</h1>
+  <div className="Home">
+    <CityList />
   </div>
 );

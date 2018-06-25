@@ -1,3 +1,13 @@
+@import '../styles/mixins.scss';
+
 .App {
   text-align: center;
+
+  &__content {
+    padding-top: 8rem;
+
+    @include mobile {
+      padding-top: 6.2rem;
+    }
+  }
 }

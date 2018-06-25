@@ -1,0 +1,28 @@
+@import '../../styles/variables.scss';
+@import '../../styles/colors.scss';
+@import '../../styles/mixins.scss';
+
+.Header {
+  background-color: rgba($dark-blue, .8);
+  padding: 2rem 0;
+  position: fixed;
+  width: 100%;
+  z-index: 5;
+
+  &__title a {
+    color: white;
+    text-decoration: none;
+    font-family: $secondary-font;
+    font-size: 2.5rem;
+    letter-spacing: .3rem;
+    transition: color .3s ease-in-out;
+
+    &:hover {
+      color: $orange;
+    }
+
+    @include mobile {
+      font-size: 1.5rem;
+    }
+  }
+}

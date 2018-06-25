@@ -1,10 +1,10 @@
 import React from 'react';
 
-export default ({ match }) => {
-  console.log('City.js', match);
+import './CityDetails.scss';
 
+export default ({ match }) => {
   return (
-    <div>
+    <div className="CityDetails">
       <h2>City details {match.params.id}</h2>
     </div>
   )

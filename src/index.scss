@@ -1,5 +1,19 @@
+@import './styles/colors.scss';
+@import './styles/variables.scss';
+
+html, body {
+  height: 100%;
+  width: 100%;
+}
+
 body {
+  background-image: url('./images/background.svg');
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-color: $orange;
+  font-family: $primary-font;
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
 }
