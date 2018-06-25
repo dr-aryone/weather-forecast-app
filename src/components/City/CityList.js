@@ -3,11 +3,6 @@ import { NavLink } from 'react-router-dom';
 import classNames from 'classnames';
 
 import cities from '../../utils/cities';
-import teresinaImg from '../../images/teresina.jpg';
-import sanFranciscoImg from '../../images/san-francisco.jpg';
-import amsterdamImg from '../../images/amsterdam.jpg';
-import longIslandCityImg from '../../images/long-island-city.jpg';
-import tokyoImg from '../../images/tokyo.jpg';
 import fetch from '../../utils/fetch';
 
 import { weather } from '../../utils/mock-data';
@@ -40,34 +35,22 @@ class CityList extends Component {
   }
 
   fetchCitiesData = () => {
-    const dataTemplate = {
-      weather: {
-        metric: 0,
-        imperial: 0
-      }
-    };
-
     Promise.all([
       ...this.fetchDataByUnits('metric'),
       ...this.fetchDataByUnits('imperial')
     ]).then((results) => {
         const weatherData = results.slice(0,5).map((data) => {
-          const { name, main, weather } = data;
-          const cityData = { ...dataTemplate };
+          const { name, main, weather, sys } = data;
 
-          cityData.name = name;
-          cityData.routeName = this.getRouteName(name);
-          cityData.weather.metric = Math.floor(main.temp);
-          cityData.weather = Object.assign(
-            {},
-            cityData.weather,
-            {
-              description: weather[0].description,
-              icon: weather[0].icon
+          return {
+            name,
+            routeName: this.getRouteName(name),
+            country: sys.country,
+            weather: {
+              metric: Math.floor(main.temp),
+              description: weather[0].main,
             }
-          );
-
-          return cityData;
+          };
         });
 
         results.slice(5).forEach((data) => {
@@ -92,57 +75,43 @@ class CityList extends Component {
     this.setState({ weatherUnits }, this.updateCityLinks);
   }
 
-  getCityImage = (name) => {
-    let cityImage;
+  updateCityLinks = () => {
+    const cityLinks = this.state.weatherData.map((city) => (
+      <NavLink to={`/city/${city.routeName}`} key={city.routeName}>
+        <span className="CityList__weather">
+          {city.weather[this.state.weatherUnits]}
+          <small>{UNITS_CODE[this.state.weatherUnits]}</small>
+        </span>
+        <span className="CityList__description">
+          {city.weather.description}
+        </span>
+        <span className="CityList__name">
+          {city.name}, {city.country}
+        </span>
+      </NavLink>
+    ));
 
-    switch (name) {
-      case 'teresina':
-        cityImage = teresinaImg;
-        break;
-      case 'san-francisco':
-        cityImage = sanFranciscoImg;
-        break;
-      case 'amsterdam':
-        cityImage = amsterdamImg;
-        break;
-      case 'long-island-city':
-        cityImage = longIslandCityImg;
-        break;
-      case 'tokyo':
-        cityImage = tokyoImg;
-        break;
-      default:
-        cityImage = '';
-    }
-
-    return cityImage;
+    this.setState({ cityLinks });
   }
 
-  updateCityLinks = () => {
-    const cityLinks = this.state.weatherData.map((city) => {
+  getCityLinks = () => {
+    const cityLinks = cities.map((city) => {
       const itemStyle = {
-        backgroundImage: `url(${this.getCityImage(city.routeName)})`
+        backgroundImage: `url(${city.image})`
       }
 
       return (
         <li className="CityList__item" key={city.name} style={itemStyle}>
-          <NavLink to={`/city/${city.routeName}`}>
-            <span className="CityList__weather">
-              {city.weather[this.state.weatherUnits]}
-              <small>{UNITS_CODE[this.state.weatherUnits]}</small>
-            </span>
-            <span className="CityList__description">
-              {city.weather.description}
-            </span>
-            <span className="CityList__name">
-              {city.name}
-            </span>
-          </NavLink>
+          {
+            this.state.cityLinks.filter((cityLink) => (
+              cityLink.key === city.routeName
+            ))
+          }
         </li>
       );
     });
 
-    this.setState({ cityLinks });
+    return cityLinks;
   }
 
   render () {
@@ -171,7 +140,7 @@ class CityList extends Component {
           </span>
         </div>
         <ul className="CityList__content">
-          {this.state.cityLinks}
+          {this.getCityLinks()}
         </ul>
       </div>
     );

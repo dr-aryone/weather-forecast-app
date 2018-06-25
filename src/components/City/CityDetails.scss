@@ -1,3 +1,57 @@
+@import '../../styles/colors.scss';
+@import '../../styles/mixins.scss';
+
 .CityDetails {
-  
+  background-color: rgba($dark-blue, .2);
+  display: flex;
+  margin: 2rem;
+  padding: 2rem 0;
+
+  @include mobile {
+    align-items: center;
+    flex-direction: column;
+  }
+
+  &__body {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+
+    @include mobile {
+      flex-direction: column;
+    }
+  }
+
+  &__image {
+    padding: 0 2rem;
+    width: 30%;
+
+    @include mobile {
+      width: unset;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &__info {
+    border-left: .1rem solid $orange;
+    color: $white;
+    padding: 0 2rem;
+    text-align: left;
+    width: 70%;
+
+    @include mobile {
+      border: none;
+      margin-top: 1rem;
+      text-align: center;
+    }
+  }
+
+  &__title {
+    font-size: 1.5rem;
+    font-weight: 800;
+  }
 }
