@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { NavLink } from 'react-router-dom';
 
 import cities from '../../utils/cities';
 import fetch from '../../utils/fetch';
@@ -67,7 +68,6 @@ class CityDetails extends Component {
   getHumanTime = (seconds) => {
     const date = new Date(seconds * 1000);
     const [, month, day] = date.toDateString().split(' ');
-    console.log(date);
     const timezone = (date.getTimezoneOffset() / 60) * -1;
 
     return `${month} ${day}, ${date.toLocaleTimeString()} ${this.getFormattedTimezone(timezone)}`;
@@ -152,10 +152,6 @@ class CityDetails extends Component {
 
     return (
       <div className="CityDetails">
-        <UnitsToggle
-          metric={this.state.units === 'metric'}
-          imperial={this.state.units === 'imperial'}
-          onToggleHandler={this.onToggleUnitsClick} />
         <div className="CityDetails__image" style={imageStyle}></div>
         <div className="CityDetails__info">
           <div className="CityDetails__title">
@@ -192,6 +188,13 @@ class CityDetails extends Component {
             </div>
           </div>
         </div>
+        <UnitsToggle
+          metric={this.state.units === 'metric'}
+          imperial={this.state.units === 'imperial'}
+          onToggleHandler={this.onToggleUnitsClick} />
+        <NavLink to='/' className="CityDetails__back-button">
+          back to home
+        </NavLink>
       </div>
     )
   }

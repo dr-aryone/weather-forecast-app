@@ -17,6 +17,24 @@
     padding-top: 0;
   }
 
+  &__back-button {
+    color: $orange;
+    font-family: $secondary-font;
+    font-size: 2rem;
+    margin-left: 1.5rem;
+    position: absolute;
+    left: 0;
+    bottom: -3rem;
+
+    &:before {
+      content: '\25C0';
+      font-size: 1.2rem;
+      left: -1.2rem;
+      position: absolute;
+      top: .4rem;
+    }
+  }
+
   &__body {
     display: flex;
     flex-wrap: wrap;
