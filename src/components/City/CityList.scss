@@ -3,38 +3,7 @@
 @import '../../styles/variables.scss';
 
 .CityList {
-
-  &__units {
-    align-items: center;
-    color: $white;
-    display: flex;
-    font-size: 1.5rem;
-    font-weight: 800;
-    justify-content: space-around;
-    margin: 0 auto;
-    padding: 2rem 0 1rem;
-    width: 10rem;
-
-    &--active {
-      color: $orange;
-    }
-
-    span:nth-child(2) {
-      border-right: .1rem solid $orange;
-      height: 2rem;
-    }
-
-    span:not(:nth-child(2)) {
-      // color: $white;
-      cursor: pointer;
-      transition: color .3s ease-in-out;
-      width: 3rem;
-
-      &:hover {
-        color: $dark-blue;
-      }
-    }
-  }
+  margin-top: 1rem;
 
   &__content {
     display: flex;

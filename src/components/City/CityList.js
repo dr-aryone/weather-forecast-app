@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
-import classNames from 'classnames';
 
 import cities from '../../utils/cities';
 import fetch from '../../utils/fetch';
+
+import UnitsToggle from './UnitsToggle';
 
 import './CityList.css';
 
@@ -18,7 +19,7 @@ const API_URL = 'http://api.openweathermap.org/data/2.5/weather';
 class CityList extends Component {
   state = {
     weatherData: [],
-    weatherUnits: 'metric',
+    units: 'metric',
     cityLinks: [],
   };
 
@@ -69,16 +70,16 @@ class CityList extends Component {
   }
 
   onToggleUnitsClick = (e) => {
-    const weatherUnits = e.currentTarget.getAttribute('id');
-    this.setState({ weatherUnits }, this.updateCityLinks);
+    const units = e.currentTarget.getAttribute('id');
+    this.setState({ units }, this.updateCityLinks);
   }
 
   updateCityLinks = () => {
     const cityLinks = this.state.weatherData.map((city) => (
       <NavLink to={`/city/${city.routeName}`} key={city.routeName}>
         <span className="CityList__weather">
-          {city.weather[this.state.weatherUnits]}
-          <small>{UNITS_CODE[this.state.weatherUnits]}</small>
+          {city.weather[this.state.units]}
+          <small>{UNITS_CODE[this.state.units]}</small>
         </span>
         <span className="CityList__description">
           {city.weather.description}
@@ -113,30 +114,13 @@ class CityList extends Component {
   }
 
   render () {
-    const metricClass = classNames({
-      'CityList__units--active': this.state.weatherUnits === 'metric',
-    });
-    const imperialClass = classNames({
-      'CityList__units--active': this.state.weatherUnits === 'imperial',
-    });
-
     return (
       <div className="CityList">
-        <div className="CityList__units">
-          <span
-            id="metric"
-            className={metricClass}
-            onClick={this.onToggleUnitsClick}>
-            &#8451;
-          </span>
-          <span></span>
-          <span
-            id="imperial"
-            className={imperialClass}
-            onClick={this.onToggleUnitsClick}>
-            &#8457;
-          </span>
-        </div>
+        <UnitsToggle
+          metric={this.state.units === 'metric'}
+          imperial={this.state.units === 'imperial'}
+          onToggleHandler={this.onToggleUnitsClick} />
+
         <ul className="CityList__content">
           {this.getCityLinks()}
         </ul>
