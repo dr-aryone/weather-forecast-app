@@ -46,7 +46,7 @@ class CityDetails extends Component {
     sunrise: 0,
     sunset: 0,
     humidity: 0,
-    units: 'imperial',
+    units: 'metric',
   }
 
   componentWillMount = () => {
