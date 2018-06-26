@@ -192,7 +192,7 @@ class CityDetails extends Component {
           metric={this.state.units === 'metric'}
           imperial={this.state.units === 'imperial'}
           onToggleHandler={this.onToggleUnitsClick} />
-        <NavLink to='/' className="CityDetails__back-button">
+        <NavLink to='/weather-forecast-app' className="CityDetails__back-button">
           back to home
         </NavLink>
       </div>
