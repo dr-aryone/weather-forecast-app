@@ -14,7 +14,7 @@ class App extends Component {
         <div className="App">
           <Header />
           <div className="App__content">
-            <Route exact path='/' component={Home} />
+            <Route exact path='/weather-forecast-app' component={Home} />
             <Route path='/city/:id' component={CityDetails} />
           </div>
         </div>
