@@ -3,21 +3,20 @@ import { NavLink } from 'react-router-dom';
 
 import cities from '../../utils/cities';
 import fetch from '../../utils/fetch';
+import resources from '../../utils/resources';
 
-import UnitsToggle from './UnitsToggle';
+import UnitsToggle from '../Units/UnitsToggle';
 
 import './CityDetails.css';
 
-const API_KEY = '51d01ab68d980980b68a0ffae012d080';
-const API_URL = 'http://api.openweathermap.org/data/2.5/weather';
-const speedUnit = {
-  metric: 'meter/sec',
-  imperial: 'miles/hour',
-}
-const UNITS_CODE = {
-  metric: '\u2103',
-  imperial: '\u2109',
-}
+const {
+  API_URL,
+  ICON_URL,
+  API_KEY,
+  APP_ROOT,
+  SPEED_UNIT,
+  UNITS_CODE
+} = resources;
 
 class CityDetails extends Component {
   state = {
@@ -58,9 +57,12 @@ class CityDetails extends Component {
     this.setState({ id, name, image });
   }
 
-  getFormattedTimezone = (minutes) => {
-    const sign = minutes > 0 ? '+' : '';
-    const hours = minutes;
+  componentDidMount = () => {
+    this.getCityDetails();
+  }
+
+  getFormattedTimezone = (hours) => {
+    const sign = hours > 0 ? '-' : '+';
 
     return `GMT${sign}${hours}`;
   }
@@ -68,14 +70,18 @@ class CityDetails extends Component {
   getHumanTime = (seconds) => {
     const date = new Date(seconds * 1000);
     const [, month, day] = date.toDateString().split(' ');
-    const timezone = (date.getTimezoneOffset() / 60) * -1;
+    const localeTime = date.toLocaleTimeString();
+    const timezoneInHours = date.getTimezoneOffset() / 60;
+    const formattedTimezone = this.getFormattedTimezone(timezoneInHours);
 
-    return `${month} ${day}, ${date.toLocaleTimeString()} ${this.getFormattedTimezone(timezone)}`;
+    return `${month} ${day}, ${localeTime} ${formattedTimezone}`;
   }
 
-  fetchCityWeather = (units) => (
-    fetch(`${API_URL}?id=${this.state.id}&appid=${API_KEY}&units=${units}`)
-  )
+  fetchCityWeather = (units) => {
+    const url = `${API_URL}?id=${this.state.id}&appid=${API_KEY}&units=${units}`;
+
+    return fetch(url);
+  }
 
   getCityDetails = () => {
     Promise.all([
@@ -88,6 +94,7 @@ class CityDetails extends Component {
       const imperialMinTemp = imperialData.main.temp_min;
       const imperialMaxTemp = imperialData.main.temp_max;
       const imperialWindSpeed = imperialData.wind.speed;
+
       this.setState({
         weather: {
           description: weather[0].description,
@@ -116,10 +123,6 @@ class CityDetails extends Component {
     })
   }
 
-  componentDidMount = () => {
-    this.getCityDetails();
-  }
-
   getCityImage = (name) => {
     const city = cities.filter((city) => city.routeName === name);
 
@@ -128,18 +131,14 @@ class CityDetails extends Component {
 
   onToggleUnitsClick = (e) => {
     const units = e.currentTarget.getAttribute('id');
+
     this.setState({ units });
   }
 
   render () {
-    const imageStyle = {
-      backgroundImage: `url(${this.state.image})`,
-      margin: `0 1rem`,
-      backgroundPosition: 'center',
-      backgroundSize: 'cover',
-    }
     const {
       name,
+      image,
       weather,
       windSpeed,
       windDirection,
@@ -149,6 +148,12 @@ class CityDetails extends Component {
       humidity,
       units
     } = this.state;
+    const imageStyle = {
+      backgroundImage: `url(${image})`,
+      margin: `0 1rem`,
+      backgroundPosition: 'center',
+      backgroundSize: 'cover',
+    }
 
     return (
       <div className="CityDetails">
@@ -163,7 +168,7 @@ class CityDetails extends Component {
               <p className="CityDetails__icon-wrapper">
                 <small>{weather.description}</small>
                 <img
-                  src={`http://openweathermap.org/img/w/${weather.icon}.png`}
+                  src={`${ICON_URL}/${weather.icon}.png`}
                   alt='Icon' />
               </p>
             </div>
@@ -179,7 +184,7 @@ class CityDetails extends Component {
               <p><small>Humidity: </small>{humidity}%</p>
               <p>
                 <small>Wind speed: </small>
-                {windSpeed[units]} {speedUnit[units]}
+                {windSpeed[units]} {SPEED_UNIT[units]}
               </p>
               <p><small>Wind direction: </small>{windDirection} deg</p>
               <p><small>Clouds: </small>{clouds}%</p>
@@ -192,7 +197,7 @@ class CityDetails extends Component {
           metric={this.state.units === 'metric'}
           imperial={this.state.units === 'imperial'}
           onToggleHandler={this.onToggleUnitsClick} />
-        <NavLink to='/weather-forecast-app' className="CityDetails__back-button">
+        <NavLink to={APP_ROOT} className="CityDetails__back-button">
           back to home
         </NavLink>
       </div>

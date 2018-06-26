@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
 import { Route, BrowserRouter } from "react-router-dom";
 
+import resources from '../utils/resources';
+
+import Header from './Header/Header';
 import Home from './Home/Home';
 import CityDetails from './City/CityDetails';
-import Header from './Header/Header';
 
 import './App.css';
+
+const { APP_ROOT } = resources;
 
 class App extends Component {
   render() {
@@ -14,7 +18,7 @@ class App extends Component {
         <div className="App">
           <Header />
           <div className="App__content">
-            <Route exact path='/weather-forecast-app' component={Home} />
+            <Route exact path={APP_ROOT} component={Home} />
             <Route path='/city/:id' component={CityDetails} />
           </div>
         </div>

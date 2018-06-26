@@ -3,24 +3,20 @@ import { NavLink } from 'react-router-dom';
 
 import cities from '../../utils/cities';
 import fetch from '../../utils/fetch';
+import resources from '../../utils/resources';
 
-import UnitsToggle from './UnitsToggle';
+import UnitsToggle from '../Units/UnitsToggle';
 
 import './CityList.css';
 
-const UNITS_CODE = {
-  metric: '\u2103',
-  imperial: '\u2109',
-}
-
-const API_KEY = '51d01ab68d980980b68a0ffae012d080';
-const API_URL = 'http://api.openweathermap.org/data/2.5/weather';
+const { API_KEY, API_URL, UNITS_CODE } = resources;
+const CITY_COUNT = cities.length;
 
 class CityList extends Component {
   state = {
     weatherData: [],
-    units: 'metric',
     cityLinks: [],
+    units: 'metric',
   };
 
   getRouteName = (name) => {
@@ -28,9 +24,11 @@ class CityList extends Component {
   }
 
   fetchDataByUnits = (unit) => {
-    return cities.map((city) => (
-      fetch(`${API_URL}?id=${city.id}&appid=${API_KEY}&units=${unit}`)
-    ));
+    return cities.map((city) => {
+      const url = `${API_URL}?id=${city.id}&appid=${API_KEY}&units=${unit}`;
+
+      return fetch(url)
+    });
   }
 
   fetchCitiesData = () => {
@@ -38,7 +36,7 @@ class CityList extends Component {
       ...this.fetchDataByUnits('metric'),
       ...this.fetchDataByUnits('imperial')
     ]).then((results) => {
-        const weatherData = results.slice(0,5).map((data) => {
+        const weatherData = results.slice(0, CITY_COUNT).map((data) => {
           const { name, main, weather, sys } = data;
 
           return {
@@ -52,13 +50,13 @@ class CityList extends Component {
           };
         });
 
-        results.slice(5).forEach((data) => {
+        results.slice(CITY_COUNT).forEach((data) => {
           const { name, main } = data;
-          const weatherDataToAdd = weatherData.find((elem) => (
+          const weatherDataToUpdate = weatherData.find((elem) => (
             elem.name === name
           ));
 
-          weatherDataToAdd.weather.imperial = Math.floor(main.temp);
+          weatherDataToUpdate.weather.imperial = Math.floor(main.temp);
         });
 
         this.setState({ weatherData }, this.updateCityLinks);
@@ -71,39 +69,45 @@ class CityList extends Component {
 
   onToggleUnitsClick = (e) => {
     const units = e.currentTarget.getAttribute('id');
+
     this.setState({ units }, this.updateCityLinks);
   }
 
   updateCityLinks = () => {
-    const cityLinks = this.state.weatherData.map((city) => (
-      <NavLink to={`/city/${city.routeName}`} key={city.routeName}>
-        <span className="CityList__weather">
-          {city.weather[this.state.units]}
-          <small>{UNITS_CODE[this.state.units]}</small>
-        </span>
-        <span className="CityList__description">
-          {city.weather.description}
-        </span>
-        <span className="CityList__name">
-          {city.name}, {city.country}
-        </span>
-      </NavLink>
-    ));
+    const cityLinks = this.state.weatherData.map((city) => {
+      const { routeName, weather, name, country } = city;
+
+      return (
+        <NavLink to={`/city/${routeName}`} key={routeName}>
+          <span className="CityList__weather">
+            {weather[this.state.units]}
+            <small>{UNITS_CODE[this.state.units]}</small>
+          </span>
+          <span className="CityList__description">
+            {weather.description}
+          </span>
+          <span className="CityList__name">
+            {name}, {country}
+          </span>
+        </NavLink>
+      )
+    });
 
     this.setState({ cityLinks });
   }
 
   getCityLinks = () => {
     const cityLinks = cities.map((city) => {
-      const itemStyle = {
-        backgroundImage: `url(${city.image})`
+      const { routeName, name, image } = city;
+      const linkStyle = {
+        backgroundImage: `url(${image})`
       }
 
       return (
-        <li className="CityList__item" key={city.name} style={itemStyle}>
+        <li className="CityList__item" key={name} style={linkStyle}>
           {
             this.state.cityLinks.filter((cityLink) => (
-              cityLink.key === city.routeName
+              cityLink.key === routeName
             ))
           }
         </li>

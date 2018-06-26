@@ -1,8 +1,8 @@
-import teresinaImg from '../images/teresina.jpg';
-import sanFranciscoImg from '../images/san-francisco.jpg';
-import amsterdamImg from '../images/amsterdam.jpg';
-import longIslandCityImg from '../images/long-island-city.jpg';
-import tokyoImg from '../images/tokyo.jpg';
+import teresinaImg from '../images/cities/teresina.jpg';
+import sanFranciscoImg from '../images/cities/san-francisco.jpg';
+import amsterdamImg from '../images/cities/amsterdam.jpg';
+import longIslandCityImg from '../images/cities/long-island-city.jpg';
+import tokyoImg from '../images/cities/tokyo.jpg';
 
 export default [
   {

@@ -1,5 +1,5 @@
 @import './styles/colors.scss';
-@import './styles/variables.scss';
+@import './styles/fonts.scss';
 
 html, body {
   height: 100%;
@@ -7,12 +7,12 @@ html, body {
 }
 
 body {
-  background-image: url('./images/background.svg');
   background-attachment: fixed;
+  background-color: $orange;
+  background-image: url('./images/background.svg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  background-color: $orange;
   font-family: $primary-font;
   margin: 0;
   padding: 0;
