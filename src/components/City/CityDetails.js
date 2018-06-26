@@ -25,7 +25,7 @@ class CityDetails extends Component {
     image: '',
     weather: {
       description: '',
-      icon: '',
+      icon: '03d',
       metric: {
         temp: 0,
         tempMin: 0,
@@ -57,11 +57,20 @@ class CityDetails extends Component {
     this.setState({ id, name, image });
   }
 
+  getFormattedTimezone = (minutes) => {
+    const sign = minutes > 0 ? '+' : '';
+    const hours = minutes;
+
+    return `GMT${sign}${hours}`;
+  }
+
   getHumanTime = (seconds) => {
     const date = new Date(seconds * 1000);
     const [, month, day] = date.toDateString().split(' ');
+    console.log(date);
+    const timezone = (date.getTimezoneOffset() / 60) * -1;
 
-    return `${month} ${day}, ${date.toLocaleTimeString()}`;
+    return `${month} ${day}, ${date.toLocaleTimeString()} ${this.getFormattedTimezone(timezone)}`;
   }
 
   fetchCityWeather = (units) => (
@@ -135,8 +144,6 @@ class CityDetails extends Component {
       windSpeed,
       windDirection,
       clouds,
-      snow,
-      rain,
       sunrise,
       sunset,
       humidity,
@@ -160,7 +167,8 @@ class CityDetails extends Component {
               <p className="CityDetails__icon-wrapper">
                 <small>{weather.description}</small>
                 <img
-                  src={`http://openweathermap.org/img/w/${weather.icon}.png`} />
+                  src={`http://openweathermap.org/img/w/${weather.icon}.png`}
+                  alt='Icon' />
               </p>
             </div>
             <div className="CityDetails__extra-info">

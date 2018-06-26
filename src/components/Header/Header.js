@@ -1,8 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-import UnitsToggle from '../City/UnitsToggle';
-
 import './Header.css';
 
 export default () => (
